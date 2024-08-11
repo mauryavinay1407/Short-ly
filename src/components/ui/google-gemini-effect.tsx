@@ -31,9 +31,9 @@ export const GoogleGeminiEffect = ({
         {description ||
           ` Shorten your URLs effortlessly and share them with the world.`}
       </p>
-      <div className="w-full h-screen -top-60 md:-top-40  flex items-center justify-center bg-red-transparent absolute ">
-        <button className="font-bold bg-white rounded-full md:px-4 md:py-2 px-2 py-1 md:mt-24 mt-8 z-30 md:text-base text-black text-xs  w-fit mx-auto "
-        onClick={()=>router.push('/home')}
+      <div className="w-full h-screen -top-60 md:-top-40 flex items-center justify-center bg-red-transparent absolute ">
+        <button className="font-bold bg-white rounded-full p-20 md:px-4 md:py-2 px-2 py-1 md:mt-24 mt-8 z-30 md:text-base text-black text-xs  w-fit mx-auto "
+        onClick={()=>router.push('/sign-in')}
         >
          Get Started
         </button>
