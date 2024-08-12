@@ -3,7 +3,7 @@
 export const GlowingButton = ({ children, onClick }: any) => {
   return (
     <div
-      className="h-12 w-36 bg-black flex justify-center items-center ml-6 sm:h-12 sm:w-40 md:h-16 md:w-44 lg:h-20 lg:w-36"
+      className="h-12 w-36 bg-black flex justify-center items-center ml-2 sm:h-12 sm:w-40 md:h-16 md:w-44 lg:h-20 lg:w-36"
       onClick={onClick}
     >
       <div className="absolute inline-flex group">

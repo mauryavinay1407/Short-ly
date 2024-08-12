@@ -68,7 +68,9 @@ const Home: React.FC = () => {
             placeholder="Paste your URL here"
             onChange={(e)=>setOriginalUrl(e.target.value)}
           />
+          <div className='md:w-30 flex justify-center'>
           <GlowingButton onClick={handleShorten}> Shorten </GlowingButton>
+          </div>
         </div>
 
         {shortUrl && (
