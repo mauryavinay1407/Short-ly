@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark, neobrutalism, shadesOfPurple } from "@clerk/themes";
+import {Toaster} from 'react-hot-toast'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,7 +38,10 @@ export default function RootLayout({
             disableTransitionOnChange
           >
               <div className="flex items-start justify-center min-h-screen">
-               
+              <Toaster
+  position="top-center"
+  reverseOrder={false}
+/>
         {children}
             
               </div>

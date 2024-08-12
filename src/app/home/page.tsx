@@ -4,19 +4,34 @@ import { ModeToggle } from '@/components/ThemeToggler';
 import Head from 'next/head';
 import { useState, MouseEvent } from 'react';
 import { useRouter } from 'next/navigation'
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const Home: React.FC = () => {
   const [shortUrl, setShortUrl] = useState<string>('');
-
-  const handleShorten = () => {
-    setShortUrl('https://short.ly/example');
+  const [originalUrl,setOriginalUrl]=useState<string>('');
+  const handleShorten = async() => {
+    try {
+      const response = await axios.post('/api/url', { url: originalUrl });
+      if (response.status === 201) {
+        setShortUrl(`${window.location.origin}/${response.data.Id}`);
+      } else {
+        console.error('Error:', response.data.error);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('An error occurred:', error.response?.data || error.message);
+      } else {
+        console.error('An unexpected error occurred:', error);
+      }
+    }
   };
 
   const router=useRouter();
   const copyToClipboard = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     navigator.clipboard.writeText(shortUrl);
-    alert('URL copied to clipboard!');
+    toast.success("URL copied to clipboard!");
   };
 
   return (
@@ -51,12 +66,13 @@ const Home: React.FC = () => {
             type="text"
             className="w-full p-1 md:p-3 rounded-full text-lg bg-transparent border-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-800 text-gray-900 dark:text-gray-200"
             placeholder="Paste your URL here"
+            onChange={(e)=>setOriginalUrl(e.target.value)}
           />
           <GlowingButton onClick={handleShorten}> Shorten </GlowingButton>
         </div>
 
         {shortUrl && (
-          <div className="mt-8 flex items-center justify-between w-full max-w-sm md:max-w-lg mx-auto bg-gray-800 p-4 rounded-lg border border-gray-700">
+          <div className="mt-8 flex items-center justify-between w-full max-w-sm md:max-w-lg mx-auto bg-gray-900 hover:bg-slate-950 p-4 rounded-lg border border-gray-700">
             <p className="text-gray-200 text-lg truncate">{shortUrl}</p>
             <button
               onClick={copyToClipboard}
