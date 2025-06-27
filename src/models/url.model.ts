@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const urlSchema = new mongoose.Schema({
   shortId: {
@@ -9,6 +9,17 @@ const urlSchema = new mongoose.Schema({
   redirectURL: {
     type: String,
     required: true,
+  },
+  userId: {
+    type: String,
+    required: false,
+  },
+  clickCount: {
+    type: Number,
+    default: 0,
+  },
+  lastAccessed: {
+    type: Date,
   },
   visitInfo: [{
     timestamp: { type: Number }
