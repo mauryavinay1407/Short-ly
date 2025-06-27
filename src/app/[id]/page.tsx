@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import URL from '@/models/url.model';
 import { dbConnect } from '@/dbConfig/dbConfig';
-import NotFound from '../not-found';
 
 
 dbConnect();
@@ -13,6 +12,8 @@ export default async function RedirectPage({ params }: { params: { id: string } 
     await URL.findOneAndUpdate(
       { shortId },
       {
+        $inc: { clickCount: 1 },
+        $set: { lastAccessed: new Date() },
         $push: {
           visitInfo: {
             timestamp: Date.now(),
