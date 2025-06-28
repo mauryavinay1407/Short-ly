@@ -86,7 +86,7 @@ const Dashboard: React.FC = () => {
             <FaArrowLeft />
           </Link>
           <h1 className="text-3xl text-center font-bold text-gray-900 dark:text-gray-100">
-            My URL's
+            My URL&apos;s
           </h1>
           <div className="flex items-center">
             <UserButton afterSignOutUrl="/" />
