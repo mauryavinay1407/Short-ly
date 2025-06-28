@@ -5,34 +5,48 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { MdDeleteOutline } from 'react-icons/md';
 import Link from 'next/link';
 import axios from 'axios';
+import { Modal } from '@/components/Modal';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 
 const PAGE_SIZE = 5;
 
 const SkeletonRow = () => (
   <tr className="animate-pulse">
-    <td className="p-2">
-      <div className="h-[1.8rem] bg-gray-300 rounded w-52" />
+    <td className="p-2 w-52">
+      <div className="h-[1.8rem] w-full bg-gray-300 rounded" />
     </td>
-    <td className="p-2">
-      <div className="h-[1.8rem] bg-gray-300 rounded w-48" />
+    <td className="p-2 w-48">
+      <div className="h-[1.8rem] w-full bg-gray-300 rounded" />
     </td>
-    <td className="p-2">
-      <div className="h-[1.8rem] bg-gray-300 rounded w-10" />
+    <td className="p-2 w-10">
+      <div className="h-[1.8rem] w-full bg-gray-300 rounded" />
     </td>
-    <td className="p-2">
-      <div className="h-[1.8rem] bg-gray-300 rounded w-20" />
+    <td className="p-2 w-20">
+      <div className="h-[1.8rem] w-full bg-gray-300 rounded" />
     </td>
-    <td className="p-2">
-      <div className="h-[1.8rem] bg-gray-300 rounded w-8" />
+    <td className="p-2 w-8">
+      <div className="h-[1.8rem] w-full bg-gray-300 rounded" />
+    </td>
+    <td className="p-2 w-20">
+      <div className="h-[1.8rem] w-full bg-gray-300 rounded" />
     </td>
   </tr>
 );
+
 
 const Dashboard: React.FC = () => {
   const { user } = useUser();
   const [urls, setUrls] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [analyticsUrl, setAnalyticsUrl] = useState<any | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -58,6 +72,9 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const openAnalytics = (url: any) => setAnalyticsUrl(url);
+  const closeAnalytics = () => setAnalyticsUrl(null);
+
   const paginatedUrls = urls.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const totalPages = Math.ceil(urls.length / PAGE_SIZE);
 
@@ -72,7 +89,7 @@ const Dashboard: React.FC = () => {
             My URL's
           </h1>
           <div className="flex items-center">
-          <UserButton afterSignOutUrl="/" />
+            <UserButton afterSignOutUrl="/" />
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -84,6 +101,7 @@ const Dashboard: React.FC = () => {
                 <th className="p-2 text-left">Clicks</th>
                 <th className="p-2 text-left">Created</th>
                 <th className="p-[2px] text-left">Delete</th>
+                <th className="p-[2px] text-left">Analytics</th>
               </tr>
             </thead>
             <tbody>
@@ -97,7 +115,7 @@ const Dashboard: React.FC = () => {
                     key={url.shortId}
                     className="border-b border-gray-300 dark:border-slate-700"
                   >
-                    <td className="p-2 w-52 max-w-[13rem] truncate">
+                    <td className="p-2 w-52 max-w-[16rem] truncate">
                       <a
                         href={`/${url.shortId}`}
                         target="_blank"
@@ -109,12 +127,12 @@ const Dashboard: React.FC = () => {
                           : url.shortId}
                       </a>
                     </td>
-                    <td className="p-2 w-48 max-w-[12rem] truncate">
+                    <td className="p-2 w-48 max-w-[16rem] truncate">
                       {url.redirectURL}
                     </td>
                     <td className="p-2 w-10">{url.clickCount}</td>
-                    <td className="p-2 w-20">
-                      {new Date(url.createdAt).toLocaleString()}
+                    <td className="p-2 w-24">
+                      {new Date(url.createdAt).toLocaleDateString('en-IN')}
                     </td>
                     <td
                       className="p-2 w-8 cursor-pointer"
@@ -122,11 +140,19 @@ const Dashboard: React.FC = () => {
                     >
                       <MdDeleteOutline size={24} color="red" />
                     </td>
+                    <td className="p-2 w-4">
+                      <button
+                        className="text-blue-500 underline"
+                        onClick={() => openAnalytics(url)}
+                      >
+                        View
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="p-4 text-center text-gray-500">
+                  <td colSpan={6} className="p-4 text-center text-gray-500">
                     No URLs found.
                   </td>
                 </tr>
@@ -155,6 +181,43 @@ const Dashboard: React.FC = () => {
               Next
             </button>
           </div>
+        )}
+        {/* Analytics Modal */}
+        {analyticsUrl && (
+          <Modal onClose={closeAnalytics}>
+            <h2 className="text-xl font-bold mb-4">
+              Analytics for {analyticsUrl.shortId}
+            </h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart
+                data={
+                  analyticsUrl.visitInfo
+                    .map((v: any) => ({
+                      date: new Date(v.timestamp).toLocaleDateString(),
+                      count: 1,
+                    }))
+                    // Group by date
+                    .reduce((acc: any[], curr: any) => {
+                      const found = acc.find((a) => a.date === curr.date);
+                      if (found) found.count += 1;
+                      else acc.push({ ...curr });
+                      return acc;
+                    }, [])
+                }
+              >
+                <XAxis dataKey="date" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Line type="monotone" dataKey="count" stroke="#facc15" />
+              </LineChart>
+            </ResponsiveContainer>
+            <button
+              className="mt-4 px-4 py-2 bg-yellow-400 rounded text-black font-semibold"
+              onClick={closeAnalytics}
+            >
+              Close
+            </button>
+          </Modal>
         )}
       </div>
     </div>
