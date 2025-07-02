@@ -6,6 +6,8 @@
 
 -   **Intuitive Interface:** Leveraging the power of [Tailwind CSS](https://tailwindcss.com/) and Framer Motion for smooth animations, Short-ly provides a clean and engaging user experience.
 -   **Seamless Authentication:** Integrated with [Clerk](https://clerk.dev/), Short-ly ensures secure user authentication and personalized access.
+-   **User Dashboard:** Manage all your shortened URLs in a personal dashboard. Edit, delete, and monitor your links with ease.
+-   **Click Analytics:** Track clicks and visits for each short link. View real-time analytics and visit history, including a visual chart of link activity over time.
 -   **Modern UI Components:** Utilizes [Radix UI](https://www.radix-ui.com/) components for a robust and accessible user interface, combined with [Tabler Icons](https://tablericons.com/) for a visually appealing design.
 -   **Real-time Feedback:** Features real-time notifications using [React Hot Toast](https://react-hot-toast.com/) to keep users informed of their actions.
 -   **Efficient Backend:** Powered by [Mongoose](https://mongoosejs.com/) for seamless interaction with MongoDB, ensuring efficient data management and URL storage.
